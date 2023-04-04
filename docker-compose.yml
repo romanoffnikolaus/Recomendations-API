@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  
+  db:
+    image: postgres:14.7
+    container_name: db
+    env_file:
+      - .env
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+
+  main_api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: main_api
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    command: >
+          sh -c "python manage.py collectstatic --noinput &&
+                 python manage.py migrate &&
+                 gunicorn --bind 0.0.0.0:8000 core.wsgi"
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    depends_on: 
+      - db
+      - redis
+      - test
+    
+
+  redis:
+    image: redis:alpine
+    hostname: redis
+  
+  test:
+    build:
+      context: .
+    container_name: test
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py test"
+    depends_on:
+      - db
+
+  celery:
+    build: 
+      context: .
+    env_file:
+      - .env
+    command: >
+      sh -c 'celery -A core worker -l info'
+    volumes:
+      - .:/app
+    links:
+      - redis
+    depends_on:
+      - db
+      - redis
+      - test
+      - main_api
+
+
+  nginx:
+    build: 
+      dockerfile: Dockerfile
+      context: ./docker/nginx
+    container_name: nginx
+    image: nginx
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    depends_on:
+      - main_api
+    ports:
+      - "80:80"
+    restart: always
+
+volumes: 
+  static_volume:
+  media_volume:
+  db:
+
+
+
+
+
+    
+  

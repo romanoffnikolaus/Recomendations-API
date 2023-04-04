@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -10,5 +10,7 @@ urlpatterns = [
     path('change_password/', views.ChangePasswordView.as_view()),
     path('forgot_password/', views.ForgotPasswordView.as_view()),
     path('forgot_password_complete/',views.ForgotPasswordCompleteView.as_view()),
+    path('accounts/google/login/', views.GoogleLogin.as_view(), name='google_login'),
+    path('accounts/logout/', views.GoogleLogout.as_view(), name='logout'),
 
 ]

@@ -156,3 +156,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# id = 434622932548-mm3qt16eoakev5e8qcpptosrttagkn0r.apps.googleusercontent.com
+# secr = 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

@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import ValidationError
+from django.core.validators import RegexValidator
+import re
 
 from .tasks import send_activation_code_celery, send_recovery_code_celery
 
@@ -13,6 +16,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(
         max_length=30, required=True)
     sex = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True, validators=[
+        RegexValidator(regex=r'^[a-zA-Z0-9._%+-]+@gmail\.com$', message='Enter a valid Gmail address')])
     
     class Meta:
         model = User
@@ -23,6 +28,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             'password',
             'password_confirm',
         )
+        
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.pop('password_confirm')

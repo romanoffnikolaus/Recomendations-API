@@ -145,8 +145,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 # celery settings
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 
 
 
@@ -156,7 +156,3 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-
-# id = 434622932548-mm3qt16eoakev5e8qcpptosrttagkn0r.apps.googleusercontent.com
-# secr = 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

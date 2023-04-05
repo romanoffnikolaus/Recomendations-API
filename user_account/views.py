@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -33,7 +34,7 @@ class ActivationView(APIView):
         user.activation_code = ''
         user.is_active = True
         user.save()
-        return Response('Активирован', status=200)
+        return redirect('http://127.0.0.1:8000/api/v1/books/')
 
 
 class ChangePasswordView(APIView):
@@ -72,7 +73,7 @@ class ForgotPasswordCompleteView(APIView):
             )
         
 
-class LoginView(TokenObtainPairView):
+class LoginDefaultView(TokenObtainPairView):
     @swagger_auto_schema(tags=['Account'])
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)

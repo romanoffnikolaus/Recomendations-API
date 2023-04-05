@@ -2,13 +2,15 @@ version: '3.8'
 
 services:
   
-  db:
+  database:
     image: postgres:14.7
-    container_name: db
+    container_name: database
     env_file:
       - .env
     volumes: 
-      - db:/var/lib/postgresql/data
+      - database:/var/lib/postgresql/data
+
+    # command: postgres -c 'create database book;'
 
 
   main_api:
@@ -23,12 +25,13 @@ services:
           sh -c "python manage.py collectstatic --noinput &&
                  python manage.py migrate &&
                  gunicorn --bind 0.0.0.0:8000 core.wsgi"
+                 
     env_file:
       - .env
     ports:
       - 8000:8000
     depends_on: 
-      - db
+      - database
       - redis
       - test
     
@@ -46,7 +49,7 @@ services:
     command: >
       sh -c "python manage.py test"
     depends_on:
-      - db
+      - database
 
   celery:
     build: 
@@ -60,7 +63,7 @@ services:
     links:
       - redis
     depends_on:
-      - db
+      - database
       - redis
       - test
       - main_api
@@ -84,7 +87,7 @@ services:
 volumes: 
   static_volume:
   media_volume:
-  db:
+  database:
 
 
 

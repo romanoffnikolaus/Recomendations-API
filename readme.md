@@ -85,6 +85,9 @@ You can run server with usind docker
 If you want run project without docker, you should change celery setiings:
 
 ```bash
+ATTENTION!
+If you want to check all functions of service with using docker. You should to change url in user_account.utils to 0.0.0.0. After that you can send emails for verifying/recieving
+
 CELERY_BROKER_URL = "redis://redis:6379"
 
 CELERY_RESULT_BACKEND = "redis://redis:6379"
